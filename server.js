@@ -1,19 +1,44 @@
-'use strict';
+const express = require('express')
+const bodyParser = require('body-parser')
+const { User, File } = require('./sequelize')
+const routeUsers = require('./routes/users');
+const routeFiles = require('./routes/files');
 
-const express = require('express');
-const bodyParser = require('body-parser');
 
-const models = require('./models');
-const app = express();
-
-app.use(bodyParser.json());
+const app = express()
+const router = express.Router();
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}));
 
-const port = 3000;
+// app.use('/user', router);
+// app.use('/user', routeUsers);
+app.use(routeUsers);
+app.use(routeFiles);
+// create a user
+// app.post('/api/users', (req, res) => {
+//     console.log(req.body)
+//     User.create(req.body)
+//         .then(user => res.json(user))
+// })
+// // get all users
+// router.get('/api/users', (req, res) => {
+//     console.log('User', User);
+//     console.log('true');
+//     // console.log('Users...', Users);
+//     // console.log(Users === router);
+//     User.find().then(users => res.json(users))
+// })
 
-models.sequelize.sync()
-.then(() => {
-    app.listen(port, () => {
-        console.log('App listening on port 3000!');
-    });
+// router.get('/api/comeOn', (req, res) => {
+//     console.log('User', User);
+//     console.log('router...', router);
+//     console.log('comeOn...');
+//     // console.log(Users === router);
+//     User.findAll().then(users => res.json(users))
+// })
+
+
+const port = 3000
+app.listen(port, () => {
+    console.log(`Running on http://localhost:${port}`)
 })

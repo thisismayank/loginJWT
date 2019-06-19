@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = function(sequelize, DataTypes) {
-    const User = sequelize.define('users', {
+module.exports = (sequelize, DataTypes) => {
+    return sequelize.define('users', {
         firstName: DataTypes.STRING,
         lastName: DataTypes.STRING,
         email: {
@@ -15,15 +15,18 @@ module.exports = function(sequelize, DataTypes) {
         },
         dob: DataTypes.DATE,
         isActive: DataTypes.BOOLEAN,
+        otp: DataTypes.INTEGER,
         loginRetryCount: DataTypes.INTEGER
     });
 
-    User.associate = function(models) {
-        User.belongsToMany(models.File, {
-            through: 'user-file-mapping',
-            foreignKey: 'userId'
-        });
-    };
+    // User.associate = function(models) {
+    //     User.belongsToMany(models.File, {
+    //         through: 'user-file-mapping',
+    //         foreignKey: 'userId'
+    //     });
+    // };
 
-    return User;
+    // return User;
 }
+
+// module.exports =  user;

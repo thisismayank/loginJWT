@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = function(sequelize, DataTypes) {
-    const File = sequelize.define('file', {
+module.exports = (sequelize, DataTypes) => {
+    return sequelize.define('file', {
         fileName: {
             type: DataTypes.STRING,
             unique: true
@@ -9,12 +9,12 @@ module.exports = function(sequelize, DataTypes) {
         description: DataTypes.STRING
     });
 
-    File.associate = function(models) {
-        File.belongsToMany(models.Users, {
-            through: 'user-file-mapping',
-            foreignKey: 'fileId'
-        });
-    };
+    // File.associate = function(models) {
+    //     File.belongsToMany(models.Users, {
+    //         through: 'user-file-mapping',
+    //         foreignKey: 'fileId'
+    //     });
+    // };
 
-    return File;
+    // return File;
 }
