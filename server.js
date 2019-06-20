@@ -1,8 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { User, File } = require('./sequelize')
+const { User, File, userFileMapping  } = require('./sequelize')
 const routeUsers = require('./routes/users');
 const routeFiles = require('./routes/files');
+const routeUserFileMapping = require('./routes/users-files-mappings');
 
 
 const app = express()
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // app.use('/user', routeUsers);
 app.use(routeUsers);
 app.use(routeFiles);
+app.use(routeUserFileMapping);
 // create a user
 // app.post('/api/users', (req, res) => {
 //     console.log(req.body)

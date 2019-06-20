@@ -14,5 +14,22 @@ module.exports = {
     password = '' + password; // to handle numeric passwords
     hashedPassword = '' + hashedPassword;
     return bcrypt.compareSync(password, hashedPassword);
-  }
+  },
+
+  generateOTP: function () { 
+    // var digits = '0123456789'; 
+    let OTP = ''; 
+    for (let i = 0; i < 6; i++ ) { 
+        OTP += Math.floor(Math.random() * 10); 
+    } 
+    return OTP; 
+    },
+    
+    verifyOTP: function(enteredOTP, dbOTP) {
+        if(enteredOTP === dbOTP) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -9,22 +9,49 @@ const authUtils = require('../utils/122-auth-utils');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'secretKey';
 
-const { User, File} = require('../sequelize');
+const { User, File, userFileMapping} = require('../sequelize');
 const models = require('../models/index');
 
 router.use(cors());
 
-router.post('/uploadFiles', (req, res)=> {
-    // console.log(req.body);
+router.post('/likes/:id', (req, res)=> {
+    // console.log(req);
+    let fileId = req.params.id;
+    // console.log(fileId);
+    let userId = jwt.verify(JSON.parse(req.body.token), SECRET_KEY).id;
+    // console.log(payload);
+
+    console.log(userId);
+    console.log(fileId);
     let data = {
-        fileName: req.body.fileName.toString()
+        userId: 1,
+        fileId: 1,
+        isActive: true
     };
 
-    File.create(data)
+    userFileMapping.create(data,
+        {
+            include:[User, File]
+        })
     .then(file => {
+        console.log(file.dataValues);
         res.status(200).send('File Uploaded Successfully');
     });
 })
+
+router.get('/favorites', (req, res) => {
+    let userId = jwt.verify(JSON.parse(req.body.token), SECRET_KEY).id;
+    console.log(req.body);
+
+    userFileMapping.findAll()
+    .then((files,err) => {
+        if(err) {
+            res.status(401).send('files not found');
+        }
+        console.log(files);
+        res.json(files);
+    });
+});
 
 router.get('/fetchFiles', (req, res) => {
     // console.log(req.body);
@@ -36,6 +63,8 @@ router.get('/fetchFiles', (req, res) => {
         res.json(files);
     });
 });
+
+
 // router.use(function timeLog (req, res, next) {
 //     // console.log('Time: ', Date.now())
 //     next()

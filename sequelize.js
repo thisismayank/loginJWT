@@ -1,15 +1,19 @@
 const Sequelize = require('sequelize')
 const UserModel = require('./models/users')
 const FileModel = require('./models/file')
+const userFileMappingModel = require('./models/user-file-mapping');
+
 
 
 const sequelize = new Sequelize('users', 'postgres', 'postgres', {
     dialect: 'postgres',
-    logging: false
+    // logging: false
 });
 
 const User = UserModel(sequelize, Sequelize)
 const File = FileModel(sequelize, Sequelize)
+const userFileMapping = userFileMappingModel(sequelize, Sequelize)
+
 // // BlogTag will be our way of tracking relationship between Blog and Tag models
 // // each Blog can have multiple tags and each Tag can have multiple blogs
 // const BlogTag = sequelize.define('blog_tag', {})
@@ -27,6 +31,6 @@ const File = FileModel(sequelize, Sequelize)
 
 module.exports = {
   User,
-  File
-//   Tag
+  File,
+  userFileMapping
 }
