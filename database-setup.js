@@ -43,11 +43,16 @@ const userFileMapping = userFileMappingModel(sequelize, Sequelize)
 // userFileMapping.belongsTo(File, {foreignKey: 'fileId'});
 // File.hasMany(userFileMapping, {foreignKey: 'fileId'})
 
-File.hasMany(userFileMapping)
-User.hasMany(userFileMapping);
+// File.hasMany(userFileMapping)
+// User.hasMany(userFileMapping);
 
 User.belongsToMany(File, { through: userFileMapping, foreignKey: 'userId'} );
 File.belongsToMany(User, { through: userFileMapping, foreignKey: 'fileId'} );
+
+// File.hasMany(userFileMapping)
+// User.hasMany(userFileMapping);
+// userFileMapping.belongsToMany(File, {as: 'file', foreignKey: 'fileId'});
+// userFileMapping.belongsToMany(User, {as: 'user', foreignKey: 'userId'});
 
 sequelize.sync({ force: true })
   .then(() => {

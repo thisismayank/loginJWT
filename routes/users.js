@@ -9,39 +9,16 @@ const authUtils = require('../utils/122-auth-utils');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'secretKey';
 
-const { User, Blog, Tag} = require('../sequelize');
-const models = require('../models/index');
+const { User} = require('../sequelize');
+
 const emailUtils = require('../utils/133-email-utils');
 
 router.use(cors());
 
 router.post('/fetchUsers', (req, res) => {
-    // console.log('User', User);
-    // console.log('router...', router);
-    // console.log('Users...', Users);
-    // console.log(Users === router);
-   
     User.findAll().then(users => res.json(users))
 })
-// router.use(function timeLog (req, res, next) {
-//     // console.log('Time: ', Date.now())
-//     next()
-//   })
-  // define the home page route
-//   router.get('/', function (req, res) {
-//     //   console.log(models.Users.f;
-//     res.send('Birds home page')
-//   })
 
-// router.get('/api/users', (req, res)=>{
-//     console.log('inside get');
-//     User.find()
-//     .then(user=>{
-//         console.log('inside then block of get');
-//         res.send({status: true, data: user});
-//         return user;
-//     })
-// })
 
 router.post('/login', (req, res)=>{
     User.findOne({
@@ -62,7 +39,6 @@ router.post('/login', (req, res)=>{
             let token = jwt.sign(user.dataValues, SECRET_KEY);
             res.json({token: token});
         } else {
-            // console.log('else');
             res.status(401).send('Wrong Username or password');
         }
     });
@@ -146,7 +122,8 @@ router.post('/signup', (req, res)=>{
                 res.status(400).send('User not created');
             }
             let text = `Go to ${body.url}/verifyOTP and enter ${otp}`;
-            let emailUtility = emailUtils.sendEmail(123,123);
+            res.status(200).send('User created successfully');
+            let emailUtility = emailUtils.sendEmail(user.dataValues.email, text);
             emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
                 if(err) {
                     res.status(400).send('User not created');
@@ -157,54 +134,18 @@ router.post('/signup', (req, res)=>{
         });
 });
 
-// router.post('/logout', (req, res)=>{
-
-//     let userId = jwt.verify(JSON.parse(req.body.token), SECRET_KEY).id;
-
-//     User.findOne({
-//         where: {
-//          userCode: body.userCode.toString(),
-//          email: body.email.toString(),
-//          isActive: true   
-//         }
-//     })
-//     .then((user, err) => {
-//         if(user) {
-//             res.status(400).send('User already exists');
-//         }
-//         let data = {
-//             firstName: body.firstName ? body.firstName.toString(): null,
-//             lastName: body.lastName ? body.lastName.toString(): null,
-//             email: body.email ? body.email.toString() : null,
-//             password: body.password ? authUtils.hashPassword(body.password).toString():null,
-//             userCode: body.userCode ? body.userCode.toString(): null,
-//             isActive: true,
-//             dob: body.dob ? body.dob : null,
-//             otp: body.otp ? body.otp : null,
-//             loginRetryCount: 0
-//         };
-//        return User.create(data)
-//     })
-//         .then((user) => {
-//             if(!user) {
-//                 res.status(400).send('User not created');
-//             }
-//             res.status(200).send('User created successfully');
-//         });
-// });
 
 router.put('/updatePassword', (req, res)=>{
     let userCode = jwt.verify(JSON.parse(req.body.token), SECRET_KEY).userCode;
 
     let body = req.body;
-    // let otp = authUtils.generateOTP()
         let data = {
             password: authUtils.hashPassword(body.password).toString()
         };
 
         return User.update(data, {
             where: {
-                userCode: userCode
+                userCode: userCode,
             } 
         })
         .then((user) => {
